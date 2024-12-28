@@ -1,117 +1,110 @@
 import sys
 
-# Function to parse INV data from a file
-def parse_inv_data(file_path):
-    inv_data = []
-    invarc_data = []
+# Function to parse DEL data from a file
+def parse_del_data(file_path):
+    del_data = []
+    delarc_data = []
     with open(file_path, 'r') as file:
         for line_num, line in enumerate(file, start=1):
-            # Skip lines that do not start with "INV"
-            if not line.startswith("INV"):
+            if not line.startswith("DEL"):
                 continue
 
             try:
                 fields_list = line.strip().split('\t')
 
-                # Ensure the line has enough fields
                 if len(fields_list) < 4:
                     print(f"Line {line_num} skipped: Not enough fields")
                     continue
 
-                # Extract chr name and noc
                 chr_name = fields_list[3]
-
-                # Extract relevant fields using regular expressions
                 fields = dict(item.split('=') for item in line.strip().split('\t') if '=' in item)
 
                 start = fields.get("position_start", "")
                 end = fields.get("position_end", "")
                 name = fields.get("gene_name", "")
-                genep = fields.get("gene_product", "")
                 codon_ref_seq = fields.get("codon_ref_seq", "")
                 codon_new_seq = fields.get("codon_new_seq", "")
                 mutation_category = fields.get("mutation_category", "")
+                genep = fields.get("gene_product", "")
+                gene_count = len(genep.split(',')) if genep else 0
+                genep = gene_count if gene_count > 5 else genep
 
-                # Calculate length
                 if start.isdigit() and end.isdigit():
                     length = int(end) - int(start)
                 else:
                     print(f"Line {line_num} skipped: Invalid start/end positions")
                     continue
 
-                # Notes
                 additional_notes = mutation_category.split('_', 1)[-1] if '_' in mutation_category else ""
                 notes = f'{additional_notes}, {codon_ref_seq}->{codon_new_seq}'.strip(", ")
 
-                # Build the INV entry
-                inv_entry = {
+                del_entry = {
                     "chr": chr_name,
                     "start": start,
                     "end": end,
                     "name": name,
                     "genep": genep,
-                    "type": "INV",
+                    "type": "DEL",
                     "notes": notes,
-                    "length":length
+                    "length": length
                 }
 
-                # Categorize data based on length
                 if length <= 5000:
-                    inv_data.append(inv_entry)
+                    del_data.append(del_entry)
                 else:
-                    invarc_data.append(inv_entry)
+                    delarc_data.append(del_entry)
 
             except Exception as e:
                 print(f"Error parsing line {line_num}: {line.strip()}")
                 print(f"Error details: {e}")
-    return inv_data, invarc_data
+    return del_data, delarc_data
 
-# Function to format data into the SCATTER01 structure
-def format_scatter01(inv_data):
+# Function to format SCATTER01 data
+def format_scatter01(del_data):
     scatter_template = """
-var SCATTER05 = [ "SCATTER05" , {{
+var SCATTER02 = [ "SCATTER02" , {{
   SCATTERRadius: 300,
   innerCircleSize: 1,
   outerCircleSize: 3,
-  innerCircleColor: "blue",
-  outerCircleColor: "#0000FF",
-  innerPointType: "rect", //circle,rect
-  outerPointType: "circle", //circle,rect
+  innerCircleColor: "black",
+  outerCircleColor: "black",
+  innerPointType: "circle",
+  outerPointType: "circle",
   innerrectWidth: 2,
   innerrectHeight: 2,
   outerrectWidth: 10,
   outerrectHeight: 10,
   outerCircleOpacity: 1,
   random_data: 0,
-
-}} ,[
+}} , [
 {}
-]
-];
+]];
 """
     scatter_items = [
-        f'  {{chr: "{data["chr"]}", start: "{data["start"]}", end:"{data["end"]}",change:"{data["length"]}", '
-        f'name: "{data["name"]}", genep: "{data["genep"]}",type: "INV", notes: "{data["notes"]}"}}'
-        for data in inv_data
+        f'  {{chr: "{data["chr"]}", start: "{data["start"]}", end: "{data["end"]}", '
+        f'name: "{data["name"]}", genep: "{data["genep"]}", '
+        f'change: "{data["length"]}", type: "{data["type"]}", notes: "{data["notes"]}"}}'
+        for data in del_data
     ]
     return scatter_template.format(",\n".join(scatter_items))
 
-# Function to format data into the ARC02 structure
-def format_invarc02(invarc_data):
-    invarc_template = """
-var ARC03 = [ "ARC03" , {{
+# Function to format ARC02 data
+def format_delarc02(delarc_data):
+    delarc_template = """
+var ARC01 = [ "ARC01" , {{
   innerRadius: 294,
   outerRadius: 307,
 }} , [
 {}
 ]];
 """
-    invarc_items = [
-        f'  {{chr: "{data["chr"]}", start: "{data["start"]}", end:"{data["end"]}", '
-        f'name: "{data["name"]}", genep: "{data["genep"]}",type: "INV", notes: "{data["notes"]}",color: "rgb(128, 128, 128)"}}'
-        for data in invarc_data
+    delarc_items = [
+        f'  {{chr: "{data["chr"]}", start: "{data["start"]}", end: "{data["end"]}", '
+        f'name: "{data["name"]}", genep: "{data["genep"]}", '
+        f'change: "{data["length"]}", type: "DEL", notes: "{data["notes"]}", color: "rgb(128, 128, 128)"}}'
+        for data in delarc_data
     ]
-    return invarc_template.format(",\n".join(invarc_items))
+    return delarc_template.format(",\n".join(delarc_items))
 
 # Main execution
 if __name__ == "__main__":
@@ -123,49 +116,40 @@ if __name__ == "__main__":
     input_file = sys.argv[1]
 
     # Parse the data using the input file
-    inv_data , invarc_data = parse_inv_data(input_file)
+    del_data , delarc_data = parse_del_data(input_file)
 
     # Process SCATTER01 data
-    if inv_data:
-        scatter01_output = format_scatter01(inv_data)
-    else:
-        scatter01_output = """
-var SCATTER05 = [ "SCATTER05" , {
+    #the {} are different
+    scatter01_output = format_scatter01(del_data) if del_data else """
+var SCATTER02 = [ "SCATTER02" , {
   SCATTERRadius: 300,
   innerCircleSize: 1,
   outerCircleSize: 3,
   innerCircleColor: "black",
-  outerCircleColor: "#CC3399",
-  innerPointType: "circle", //circle,rect
-  outerPointType: "circle", //circle,rect
+  outerCircleColor: "black",
+  innerPointType: "circle",
+  outerPointType: "circle",
   innerrectWidth: 2,
   innerrectHeight: 2,
   outerrectWidth: 10,
   outerrectHeight: 10,
   outerCircleOpacity: 1,
   random_data: 0,
-} ,[
-
-]
-];
+} , [
+]];
 """
-    with open("inv.js", "w") as scatter_file:
+    with open("del.js", "w") as scatter_file:
         scatter_file.write(scatter01_output)
-    print(f"SCATTER data saved to inv.js with {len(inv_data)} entries (length ≤ 5000).")
+    print(f"SCATTER data saved to del.js with {len(del_data)} entries (length ≤ 5000).")
 
     # Process ARC02 data
-    if invarc_data:
-        invarc02_output = format_invarc02(invarc_data)
-    else:
-        invarc02_output = """
-
-var ARC03 = [ "ARC03" , {
+    delarc02_output = format_delarc02(delarc_data) if delarc_data else """
+var ARC01 = [ "ARC01" , {
   innerRadius: 294,
   outerRadius: 307,
 } , [
 ]];
 """
-    with open("invarc.js", "w") as invarc_file:
-        invarc_file.write(invarc02_output)
-    print(f"ARC data saved to invarc.js with {len(invarc_data)} entries (length > 5000).")
-
+    with open("delarc.js", "w") as delarc_file:
+        delarc_file.write(delarc02_output)
+    print(f"ARC data saved to delarc.js with {len(delarc_data)} entries (length > 5000).")

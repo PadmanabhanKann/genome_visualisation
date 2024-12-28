@@ -6,7 +6,11 @@ input_file = "/home/padma/summer/test/ng_cricos/gdtools_annotate/annotate.gd"
 # List of scripts to run
 scripts = [
     "mob.py",
-        "inv.py"
+        "inv.py",
+        "amp.py",
+        "del.py",
+        "snp.py",
+        "ins.py",
 ]
 
 # Run each script with the input file as an argument

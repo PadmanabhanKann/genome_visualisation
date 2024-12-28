@@ -1,12 +1,11 @@
 import sys
-
 # Function to parse SNP data from a file
-def parse_mob_data(file_path):
-    mob_data = []
+def parse_ins_data(file_path):
+    ins_data = []
     with open(file_path, 'r') as file:
         for line_num, line in enumerate(file, start=1):
             # Skip lines that do not start with "SNP"
-            if not line.startswith("MOB"):
+            if not line.startswith("INS"):
                 continue
 
             try:
@@ -19,11 +18,11 @@ def parse_mob_data(file_path):
 
                 # Extract chr name from the 4th entry
                 chr_name = fields_list[3] 
-                MOB = fields_list[5]
+                length = fields_list[5]
                 # Extract relevant fields using regular expressions
                 fields = dict(item.split('=') for item in line.strip().split('\t') if '=' in item)
                 
-                # Ensure the mutation category starts with "mob" to process SNPs
+                # Ensure the mutation category starts with "ins" to process SNPs
                 mutation_category = fields.get("mutation_category", "")
                 if mutation_category:
                     # Extract relevant fields
@@ -36,18 +35,18 @@ def parse_mob_data(file_path):
                     codon_new_seq = fields.get("codon_new_seq", "")
 
                     # Adjust mutation category and notes
-                    mutation_type = "MOB"  # Only use "SNP" as the type
+                    mutation_type = "INS"  # Only use "SNP" as the type
                     additional_notes = mutation_category.split('_', 1)[-1] if '_' in mutation_category else ""  # Extract details like "intergenic"
                     notes = f'{additional_notes}, {codon_ref_seq}->{codon_new_seq}'  # Include extracted notes and codon change
 
                     # Build the SNP data dictionary
-                    mob_data.append({
+                    ins_data.append({
                         "chr": chr_name,
                         "start": start,
                         "end": end,
                         "name": name,
                         "genep": genep,
-                        "MOB": MOB,
+                        "length": length,
                         "type": mutation_type,  # Fixed as "SNP"
                         "noc": noc,
                         "notes": notes
@@ -56,12 +55,12 @@ def parse_mob_data(file_path):
             except Exception as e:
                 print(f"Error parsing line {line_num}: {line.strip()}")
                 print(f"Error details: {e}")
-    return mob_data
-
+    return ins_data
+#CHANGE COLOR
 # Function to format data into the SCATTER01 structure
-def format_scatter01(mob_data):
+def format_scatter01(ins_data):
     scatter_template = """
-var SCATTER06 = [ "SCATTER06" , {{
+var SCATTER04 = [ "SCATTER04" , {{
   SCATTERRadius: 300,
   innerCircleSize: 1,
   outerCircleSize: 3,
@@ -82,10 +81,10 @@ var SCATTER06 = [ "SCATTER06" , {{
 ];
 """
     scatter_items = []
-    for data in mob_data:
-        scatter_items.append(f'  {{chr: "{data["chr"]}", start: "{data["start"]}", end:"{data["end"]}",  '
+    for data in ins_data:
+        scatter_items.append(f'  {{chr: "{data["chr"]}", start: "{data["start"]}",  '
                              f'name: "{data["name"]}", genep: "{data["genep"]}", '
-                             f'change: "{data["MOB"]}", type: "{data["type"]}", noc: "{data["noc"]}", notes: "{data["notes"]}"}}')
+                             f'change: "{data["length"]}", type: "{data["type"]}", noc: "{data["noc"]}", notes: "{data["notes"]}"}}')
 
     return scatter_template.format(",\n".join(scatter_items))
 
@@ -99,19 +98,20 @@ if __name__ == "__main__":
     input_file = sys.argv[1]
 
     # Parse the data using the input file
-    mob_data = parse_mob_data(input_file)
+    ins_data = parse_ins_data(input_file)
+
 
     # Process SCATTER01 data
-    if mob_data:
-        scatter01_output = format_scatter01(mob_data)
+    if ins_data:
+        scatter01_output = format_scatter01(ins_data)
     else:
         scatter01_output = """
-var SCATTER06 = [ "SCATTER06" , {
+var SCATTER04= [ "SCATTER04" , {
   SCATTERRadius: 300,
   innerCircleSize: 1,
   outerCircleSize: 3,
-  innerCircleColor: "pink",
-  outerCircleColor: "pink",
+  innerCircleColor: "black",
+ outerCircleColor: "#000000",
   innerPointType: "circle", //circle,rect
   outerPointType: "circle", //circle,rect
   innerrectWidth: 2,
@@ -124,7 +124,11 @@ var SCATTER06 = [ "SCATTER06" , {
 ]
 ];
 """
-    with open("mob.js", "w") as scatter_file:
+    with open("ins.js", "w") as scatter_file:
         scatter_file.write(scatter01_output)
-    print(f"SCATTER data saved to mob.js with {len(mob_data)} entries (length ≤ 5000).")
+    print(f"SCATTER data saved to ins.js with {len(ins_data)} entries (length ≤ 5000).")
 
+
+
+
+  

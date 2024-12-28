@@ -1,13 +1,13 @@
 import sys
 
-# Function to parse INV data from a file
-def parse_inv_data(file_path):
-    inv_data = []
-    invarc_data = []
+# Function to parse AMP data from a file
+def parse_amp_data(file_path):
+    amp_data = []
+    amparc_data = []
     with open(file_path, 'r') as file:
         for line_num, line in enumerate(file, start=1):
-            # Skip lines that do not start with "INV"
-            if not line.startswith("INV"):
+            # Skip lines that do not start with "AMP"
+            if not line.startswith("AMP"):
                 continue
 
             try:
@@ -20,6 +20,7 @@ def parse_inv_data(file_path):
 
                 # Extract chr name and noc
                 chr_name = fields_list[3]
+                noc = int(fields_list[6]) 
 
                 # Extract relevant fields using regular expressions
                 fields = dict(item.split('=') for item in line.strip().split('\t') if '=' in item)
@@ -43,33 +44,34 @@ def parse_inv_data(file_path):
                 additional_notes = mutation_category.split('_', 1)[-1] if '_' in mutation_category else ""
                 notes = f'{additional_notes}, {codon_ref_seq}->{codon_new_seq}'.strip(", ")
 
-                # Build the INV entry
-                inv_entry = {
+                # Build the AMP entry
+                amp_entry = {
                     "chr": chr_name,
                     "start": start,
                     "end": end,
                     "name": name,
                     "genep": genep,
-                    "type": "INV",
-                    "notes": notes,
-                    "length":length
+                    "type": "AMP",
+                    "noc": noc,
+                    "notes": notes
                 }
 
                 # Categorize data based on length
                 if length <= 5000:
-                    inv_data.append(inv_entry)
+                    amp_data.append(amp_entry)
                 else:
-                    invarc_data.append(inv_entry)
+                    amparc_data.append(amp_entry)
 
             except Exception as e:
                 print(f"Error parsing line {line_num}: {line.strip()}")
                 print(f"Error details: {e}")
-    return inv_data, invarc_data
+    return amp_data, amparc_data
 
 # Function to format data into the SCATTER01 structure
-def format_scatter01(inv_data):
+def format_scatter01(amp_data):
     scatter_template = """
-var SCATTER05 = [ "SCATTER05" , {{
+    
+var SCATTER03 = [ "SCATTER03" , {{
   SCATTERRadius: 300,
   innerCircleSize: 1,
   outerCircleSize: 3,
@@ -90,28 +92,30 @@ var SCATTER05 = [ "SCATTER05" , {{
 ];
 """
     scatter_items = [
-        f'  {{chr: "{data["chr"]}", start: "{data["start"]}", end:"{data["end"]}",change:"{data["length"]}", '
-        f'name: "{data["name"]}", genep: "{data["genep"]}",type: "INV", notes: "{data["notes"]}"}}'
-        for data in inv_data
+        f'  {{chr: "{data["chr"]}", start: "{data["start"]}", end:"{data["end"]}", '
+        f'name: "{data["name"]}", genep: "{data["genep"]}", '
+        f'noc: "{data["noc"]}", type: "AMP", notes: "{data["notes"]}"}}'
+        for data in amp_data
     ]
     return scatter_template.format(",\n".join(scatter_items))
 
 # Function to format data into the ARC02 structure
-def format_invarc02(invarc_data):
-    invarc_template = """
-var ARC03 = [ "ARC03" , {{
+def format_amparc02(amparc_data):
+    amparc_template = """
+var ARC02 = [ "ARC02" , {{
   innerRadius: 294,
   outerRadius: 307,
 }} , [
 {}
 ]];
 """
-    invarc_items = [
+    amparc_items = [
         f'  {{chr: "{data["chr"]}", start: "{data["start"]}", end:"{data["end"]}", '
-        f'name: "{data["name"]}", genep: "{data["genep"]}",type: "INV", notes: "{data["notes"]}",color: "rgb(128, 128, 128)"}}'
-        for data in invarc_data
+        f'name: "{data["name"]}", genep: "{data["genep"]}", '
+        f'noc: "{data["noc"]}", type: "AMP", notes: "{data["notes"]}" , color: "rgb(0, 255, 0)"}}'
+        for data in amparc_data
     ]
-    return invarc_template.format(",\n".join(invarc_items))
+    return amparc_template.format(",\n".join(amparc_items))
 
 # Main execution
 if __name__ == "__main__":
@@ -123,19 +127,18 @@ if __name__ == "__main__":
     input_file = sys.argv[1]
 
     # Parse the data using the input file
-    inv_data , invarc_data = parse_inv_data(input_file)
-
+    amp_data , amparc_data = parse_amp_data(input_file)
     # Process SCATTER01 data
-    if inv_data:
-        scatter01_output = format_scatter01(inv_data)
+    if amp_data:
+        scatter01_output = format_scatter01(amp_data)
     else:
         scatter01_output = """
-var SCATTER05 = [ "SCATTER05" , {
+var SCATTER03= [ "SCATTER03" , {
   SCATTERRadius: 300,
   innerCircleSize: 1,
   outerCircleSize: 3,
-  innerCircleColor: "black",
-  outerCircleColor: "#CC3399",
+  innerCircleColor: "red",
+  outerCircleColor: "#CC3399"
   innerPointType: "circle", //circle,rect
   outerPointType: "circle", //circle,rect
   innerrectWidth: 2,
@@ -145,27 +148,24 @@ var SCATTER05 = [ "SCATTER05" , {
   outerCircleOpacity: 1,
   random_data: 0,
 } ,[
-
 ]
 ];
 """
-    with open("inv.js", "w") as scatter_file:
+    with open("amp.js", "w") as scatter_file:
         scatter_file.write(scatter01_output)
-    print(f"SCATTER data saved to inv.js with {len(inv_data)} entries (length ≤ 5000).")
+    print(f"SCATTER data saved to amp.js with {len(amp_data)} entries (length ≤ 5000).")
 
     # Process ARC02 data
-    if invarc_data:
-        invarc02_output = format_invarc02(invarc_data)
+    if amparc_data:
+        amparc02_output = format_amparc02(amparc_data)
     else:
-        invarc02_output = """
+        amparc02_output = """
 
-var ARC03 = [ "ARC03" , {
+var ARC02 = [ "ARC02" , {
   innerRadius: 294,
   outerRadius: 307,
-} , [
-]];
+} , []];
 """
-    with open("invarc.js", "w") as invarc_file:
-        invarc_file.write(invarc02_output)
-    print(f"ARC data saved to invarc.js with {len(invarc_data)} entries (length > 5000).")
-
+    with open("amparc.js", "w") as amparc_file:
+        amparc_file.write(amparc02_output)
+    print(f"ARC data saved to amparc.js with {len(amparc_data)} entries (length > 5000).")

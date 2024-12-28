@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>NGCircos.js</title>
+</head>
+<body>
+    
+    <script src="./lib/jquery.js"></script>
+    <script src="./lib/d3.js"></script>
+    <script src="./lib/NGCircos.js"></script>
+    <script src="irasnp1.js"></script> 
+    <script src="iradel1.js"></script>
+    <script src="irains1.js"></script>
+    <script src="iraamp1.js"></script>
+    <script src="iraarc1.js"></script>
+    <div id="NGCircos"></div>
+    
+    <script>
+    var BACKGROUNDSNP = [ "BACKGROUNDSNP" , {
+        BginnerRadius: 159,
+        BgouterRadius: 177,
+        BgFillColor: "#F2F2F2",
+        BgborderColor : "#000",
+        BgborderSize : 0.3
+    }];
+    var BACKGROUNDDEL = [ "BACKGROUNDDEL" , {
+        BginnerRadius: 138,
+        BgouterRadius: 157,
+        BgFillColor: "#F2F2F2",
+        BgborderColor : "#000",
+        BgborderSize : 0.3
+    }];
+    var BACKGROUNDAMP = [ "BACKGROUNDAMP" , {
+        BginnerRadius: 179,
+        BgouterRadius: 197,
+        BgFillColor: "#F2F2F2",
+        BgborderColor : "#000",
+        BgborderSize : 0.3
+    }];
+    var BACKGROUNDINS = [ "BACKGROUNDINS" , {
+        BginnerRadius: 199,
+        BgouterRadius: 217,
+        BgFillColor: "#F2F2F2",
+        BgborderColor : "#000",
+        BgborderSize : 0.3
+    }];
+    </script>
+    
+    <!-- Genome configuration -->
+    <script>
+        var NGCircosGenome = [
+        [
+            ["REL606" , 4641652],
+        ]
+        ];
+        NGCircos01 = new NGCircos(SCATTER01,SCATTER02,SCATTER03,SCATTER04,ARC01,NGCircosGenome, {  // Initialize NG-Circos with "NGCircosGenome" and Main configuration
+        //Main configuration
+            target : "NGCircos",                       // Main configuration "target"
+            svgWidth : 900,                             // Main configuration "svgWidth"
+            svgHeight : 600,                            // Main configuration "svgHeight"
+            svgClassName: "NGCircos",                  // Main configuration "svgClassName"
+            chrPad : 0,                              // distance between chromosomes
+            innerRadius: 246,                           // Main configuration "innerRadius"
+            outerRadius: 270,
+            SNPMouseOverDisplay : true,
+            SNPMouseOverColor : "blue",
+            SNPMouseOverCircleSize : 5,
+            SNPMouseOverCircleOpacity : 1.0,
+            SNPMouseOverCircleStrokeColor : "#F26223",
+            SNPMouseOverCircleStrokeWidth : 3,
+            SNPMouseOverTooltipsSetting :"1",
+            SNPMouseOverTooltipsHtml : " ",
+            SNPMouseOverTooltipsBorderWidth : 1,
+            SNPMouseOutDisplay : true,
+            SNPMouseOutAnimationTime : 700,
+            SNPMouseOutColor : "none",
+            SNPMouseOutCircleSize : "none",
+            SNPMouseOutCircleOpacity : 1.0,
+            SNPMouseOutCircleStrokeWidth : 0,
+            ARCMouseEvent: true,
+            ARCMouseClickDisplay: true,
+            ARCMouseClickColor: "red",
+            ARCMouseClickArcOpacity: 1,
+            ARCMouseClickArcStrokeColor: "#F26223",
+            ARCMouseClickArcStrokeWidth: 0,
+            ARCMouseClickTextFromData: "fifth",
+            ARCMouseClickTextOpacity: 1,
+            ARCMouseClickTextColor: "red",
+            ARCMouseClickTextSize: 8,
+            ARCMouseClickTextPostionX: 0,
+            ARCMouseClickTextPostionY: 0,
+            ARCMouseClickTextDrag: true,
+            ARCMouseMoveDisplay: true,
+            ARCMouseMoveColor: "none",
+            ARCMouseMoveArcOpacity: 1,
+            ARCMouseMoveArcStrokeColor: "#F26223",
+            ARCMouseMoveArcStrokeWidth: 3,
+            ARCMouseOutDisplay: true,
+            ARCMouseOutAnimationTime: 500,
+            ARCMouseOutColor: "none",
+            ARCMouseOutArcOpacity: 1,
+            ARCMouseOutArcStrokeColor: "red",
+            ARCMouseOutArcStrokeWidth: 0,
+            ARCMouseOverDisplay: true,
+            ARCMouseOverColor: "none",
+            ARCMouseOverArcOpacity: 1,
+            ARCMouseOverArcStrokeColor: "#F26223",
+            ARCMouseOverArcStrokeWidth: 3,
+            SCATTERMouseEvent:true,
+            SCATTERMouseClickDisplay: true,
+            SCATTERMouseClickColor: "none",
+            SCATTERMouseClickCircleSize: "none",
+            SCATTERMouseClickCircleOpacity: 1,
+            SCATTERMouseClickCircleStrokeColor: "#F26223",
+            SCATTERMouseClickCircleStrokeWidth: 0,
+            SCATTERMouseClickTextFromData: "fourth",
+            SCATTERMouseClickTextOpacity: 1,
+            SCATTERMouseClickTextColor: "red",
+            SCATTERMouseClickTextSize: 8,
+            SCATTERMouseClickTextPostionX: 5,
+            SCATTERMouseClickTextPostionY: 15,
+            SCATTERMouseClickTextDrag: true,
+            SCATTERMouseOverDisplay: true,
+            SCATTERMouseOverColor: "none",
+            SCATTERMouseOverCircleSize: "none",
+            SCATTERMouseOverCircleOpacity: 1,
+            SCATTERMouseOverCircleStrokeColor: "none",
+            SCATTERMouseOverCircleStrokeWidth: 0,
+        
+            SCATTERMouseOutDisplay: true,
+            SCATTERMouseOutColor: "none",
+            SCATTERMouseOutCircleSize: "none",
+            SCATTERMouseOutCircleOpacity: 1,
+            SCATTERMouseOutCircleStrokeColor: "none",
+            SCATTERMouseOutCircleStrokeWidth: 0,
+        });
+        NGCircos01.draw_genome(NGCircos01.genomeLength); // NG-Circos callback
+        NGCircos01.draw_genome(NGCircos01.genomeLength2); // NG-Circos callback second time
+    </script>
+</body>
+</html>
+

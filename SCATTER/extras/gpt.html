@@ -1,0 +1,33 @@
+var NGCircosGenome = [
+   ["chr1", 249250621],
+   ["chr2", 243199373]
+];
+
+var SCATTER01 = [
+   ["SCATTER", {
+      SCATTERFillColor: "red",
+      SCATTERFillOpacity: 0.8
+   }, [
+      {chr: "REL606", start: "70867", end: "70868", name: "SNP", des: "C", type: "mutation"},
+      // Add more data points as needed
+   ]]
+];
+
+var tooltipContent = function(d) {
+   return "item : " + d.scatter_chr + "<br>" +
+          "start : " + (parseInt(d.scatter_start) + self.ticksOffset) + "<br>" +
+          "end : " + (parseInt(d.scatter_end) + self.ticksOffset) + "<br>" +
+          "name : " + d.scatter_name + "<br>" +
+          "des : " + d.scatter_des + "<br>" +
+          "type : " + d.scatter_type;
+};
+
+var NGCircos01 = new NGCircos([SCATTER01, NGCircosGenome], {
+   target: "NGCircos",
+   svgWidth: 900,
+   svgHeight: 600,
+   SCATTERMouseOverTooltipsHtml: tooltipContent // Set the tooltip content function
+});
+
+NGCircos01.draw_genome(NGCircos01.genomeLength);
+

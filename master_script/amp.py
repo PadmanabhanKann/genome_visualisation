@@ -138,7 +138,7 @@ var SCATTER03= [ "SCATTER03" , {
   innerCircleSize: 1,
   outerCircleSize: 3,
   innerCircleColor: "red",
-  outerCircleColor: "#CC3399"
+  outerCircleColor: "#CC3399",
   innerPointType: "circle", //circle,rect
   outerPointType: "circle", //circle,rect
   innerrectWidth: 2,

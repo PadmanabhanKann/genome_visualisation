@@ -64,8 +64,8 @@ var SCATTER01 = [ "SCATTER01" , {{
   SCATTERRadius: 300,
   innerCircleSize: 1,
   outerCircleSize: 3,
-  innerCircleColor: "blue",
-  outerCircleColor: "#0000FF",
+  innerCircleColor: "#56B4E9", //blue
+  outerCircleColor: "#56B4E9",
   innerPointType: "rect", //circle,rect
   outerPointType: "circle", //circle,rect
   innerrectWidth: 2,

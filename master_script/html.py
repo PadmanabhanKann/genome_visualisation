@@ -9,7 +9,6 @@ if __name__ == "__main__":
  # Get the input file from the command-line argument
     input_file = sys.argv[1]
 
-
 def parse_chr_data(file_path):
     with open(file_path, 'r') as file:
         for line in file:
@@ -38,11 +37,10 @@ with open('genome.html', 'w') as file:
         <script src="mob.js"></script>   
         <script src="amp.js"></script>
         <script src="ins.js"></script>
-        <script src="amp1.js"></script>
+        <script src="inv.js"></script>
         <script src="invarc.js"></script>    
         <script src="delarc.js"></script>
         <script src="amparc.js"></script> 
-        <script src="snp1.js"></script>      
         <div id="NGCircos"></div>
         
         <script>

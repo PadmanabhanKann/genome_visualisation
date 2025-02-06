@@ -29,6 +29,8 @@ def parse_amp_data(file_path):
                 end = fields.get("position_end", "")
                 name = fields.get("gene_name", "")
                 genep = fields.get("gene_product", "")
+                gene_count = len(genep.split(',')) if genep else 0
+                genep = gene_count if gene_count > 5 else genep
                 codon_ref_seq = fields.get("codon_ref_seq", "")
                 codon_new_seq = fields.get("codon_new_seq", "")
                 mutation_category = fields.get("mutation_category", "")
@@ -75,8 +77,8 @@ var SCATTER03 = [ "SCATTER03" , {{
   SCATTERRadius: 300,
   innerCircleSize: 1,
   outerCircleSize: 3,
-  innerCircleColor: "blue",
-  outerCircleColor: "#0000FF",
+  innerCircleColor: "#E69F00", //orange
+  outerCircleColor: "#E69F00",
   innerPointType: "rect", //circle,rect
   outerPointType: "circle", //circle,rect
   innerrectWidth: 2,
@@ -112,7 +114,7 @@ var ARC02 = [ "ARC02" , {{
     amparc_items = [
         f'  {{chr: "{data["chr"]}", start: "{data["start"]}", end:"{data["end"]}", '
         f'name: "{data["name"]}", genep: "{data["genep"]}", '
-        f'noc: "{data["noc"]}", type: "AMP", notes: "{data["notes"]}" , color: "rgb(0, 255, 0)"}}'
+        f'noc: "{data["noc"]}", type: "AMP", notes: "{data["notes"]}" , color: "rgb(239, 159, 0)"}}'
         for data in amparc_data
     ]
     return amparc_template.format(",\n".join(amparc_items))
@@ -137,8 +139,8 @@ var SCATTER03= [ "SCATTER03" , {
   SCATTERRadius: 300,
   innerCircleSize: 1,
   outerCircleSize: 3,
-  innerCircleColor: "red",
-  outerCircleColor: "#CC3399",
+  innerCircleColor: "#E69F00", //orange
+  outerCircleColor: "#E69F00",
   innerPointType: "circle", //circle,rect
   outerPointType: "circle", //circle,rect
   innerrectWidth: 2,

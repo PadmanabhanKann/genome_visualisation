@@ -28,6 +28,8 @@ def parse_inv_data(file_path):
                 end = fields.get("position_end", "")
                 name = fields.get("gene_name", "")
                 genep = fields.get("gene_product", "")
+                gene_count = len(genep.split(',')) if genep else 0
+                genep = gene_count if gene_count > 5 else genep
                 codon_ref_seq = fields.get("codon_ref_seq", "")
                 codon_new_seq = fields.get("codon_new_seq", "")
                 mutation_category = fields.get("mutation_category", "")
@@ -73,8 +75,8 @@ var SCATTER05 = [ "SCATTER05" , {{
   SCATTERRadius: 300,
   innerCircleSize: 1,
   outerCircleSize: 3,
-  innerCircleColor: "blue",
-  outerCircleColor: "#0000FF",
+  innerCircleColor: "#D55E00", //dark orange
+  outerCircleColor: "#D55E00",
   innerPointType: "rect", //circle,rect
   outerPointType: "circle", //circle,rect
   innerrectWidth: 2,
@@ -134,8 +136,8 @@ var SCATTER05 = [ "SCATTER05" , {
   SCATTERRadius: 300,
   innerCircleSize: 1,
   outerCircleSize: 3,
-  innerCircleColor: "black",
-  outerCircleColor: "#CC3399",
+  innerCircleColor: "D55E00", // dark orange
+  outerCircleColor: "#D55E00",
   innerPointType: "circle", //circle,rect
   outerPointType: "circle", //circle,rect
   innerrectWidth: 2,

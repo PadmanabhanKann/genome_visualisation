@@ -64,8 +64,8 @@ var SCATTER04 = [ "SCATTER04" , {{
   SCATTERRadius: 300,
   innerCircleSize: 1,
   outerCircleSize: 3,
-  innerCircleColor: "blue",
-  outerCircleColor: "#0000FF",
+  innerCircleColor: "009E73", //green
+  outerCircleColor: "009E73",
   innerPointType: "rect", //circle,rect
   outerPointType: "circle", //circle,rect
   innerrectWidth: 2,
@@ -110,8 +110,8 @@ var SCATTER04= [ "SCATTER04" , {
   SCATTERRadius: 300,
   innerCircleSize: 1,
   outerCircleSize: 3,
-  innerCircleColor: "black",
- outerCircleColor: "#000000",
+  innerCircleColor: "009E73", //green
+ outerCircleColor: "009E73",
   innerPointType: "circle", //circle,rect
   outerPointType: "circle", //circle,rect
   innerrectWidth: 2,

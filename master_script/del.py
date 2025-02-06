@@ -66,8 +66,8 @@ var SCATTER02 = [ "SCATTER02" , {{
   SCATTERRadius: 300,
   innerCircleSize: 1,
   outerCircleSize: 3,
-  innerCircleColor: "black",
-  outerCircleColor: "black",
+  innerCircleColor: "#CC79A7", //pink
+  outerCircleColor: "#CC79A7",
   innerPointType: "circle",
   outerPointType: "circle",
   innerrectWidth: 2,
@@ -101,7 +101,7 @@ var ARC01 = [ "ARC01" , {{
     delarc_items = [
         f'  {{chr: "{data["chr"]}", start: "{data["start"]}", end: "{data["end"]}", '
         f'name: "{data["name"]}", genep: "{data["genep"]}", '
-        f'change: "{data["length"]}", type: "DEL", notes: "{data["notes"]}", color: "rgb(128, 128, 128)"}}'
+        f'change: "{data["length"]}", type: "DEL", notes: "{data["notes"]}", color: "rgb(204,121,167)"}}'
         for data in delarc_data
     ]
     return delarc_template.format(",\n".join(delarc_items))
@@ -125,8 +125,8 @@ var SCATTER02 = [ "SCATTER02" , {
   SCATTERRadius: 300,
   innerCircleSize: 1,
   outerCircleSize: 3,
-  innerCircleColor: "black",
-  outerCircleColor: "black",
+  innerCircleColor: "#CC79A7", //pink
+  outerCircleColor: "#CC79A7",
   innerPointType: "circle",
   outerPointType: "circle",
   innerrectWidth: 2,

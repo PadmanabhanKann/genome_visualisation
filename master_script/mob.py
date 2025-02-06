@@ -31,6 +31,8 @@ def parse_mob_data(file_path):
                     end = fields.get("position_end", "")
                     name = fields.get("gene_name", "")
                     genep = fields.get("gene_product", "")
+                    gene_count = len(genep.split(',')) if genep else 0
+                    genep = gene_count if gene_count > 5 else genep
                     noc = ""  # Placeholder for additional notes/comments
                     codon_ref_seq = fields.get("codon_ref_seq", "")
                     codon_new_seq = fields.get("codon_new_seq", "")
@@ -65,8 +67,8 @@ var SCATTER06 = [ "SCATTER06" , {{
   SCATTERRadius: 300,
   innerCircleSize: 1,
   outerCircleSize: 3,
-  innerCircleColor: "blue",
-  outerCircleColor: "#0000FF",
+  innerCircleColor: "#F0E442", //yellow
+  outerCircleColor: "#F0E442",
   innerPointType: "rect", //circle,rect
   outerPointType: "circle", //circle,rect
   innerrectWidth: 2,
@@ -110,8 +112,8 @@ var SCATTER06 = [ "SCATTER06" , {
   SCATTERRadius: 300,
   innerCircleSize: 1,
   outerCircleSize: 3,
-  innerCircleColor: "pink",
-  outerCircleColor: "pink",
+  innerCircleColor: "F0E442",
+  outerCircleColor: "F0E442",
   innerPointType: "circle", //circle,rect
   outerPointType: "circle", //circle,rect
   innerrectWidth: 2,

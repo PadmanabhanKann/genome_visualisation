@@ -1,10 +1,10 @@
 import sys
-# Function to parse SNP data from a file
+# Function to parse INS data from a file
 def parse_ins_data(file_path):
     ins_data = []
     with open(file_path, 'r') as file:
         for line_num, line in enumerate(file, start=1):
-            # Skip lines that do not start with "SNP"
+            # Skip lines that do not start with "INS"
             if not line.startswith("INS"):
                 continue
 
@@ -22,7 +22,7 @@ def parse_ins_data(file_path):
                 # Extract relevant fields using regular expressions
                 fields = dict(item.split('=') for item in line.strip().split('\t') if '=' in item)
                 
-                # Ensure the mutation category starts with "ins" to process SNPs
+                # Ensure the mutation category starts with "ins" to process INSs
                 mutation_category = fields.get("mutation_category", "")
                 if mutation_category:
                     # Extract relevant fields
@@ -35,11 +35,11 @@ def parse_ins_data(file_path):
                     codon_new_seq = fields.get("codon_new_seq", "")
 
                     # Adjust mutation category and notes
-                    mutation_type = "INS"  # Only use "SNP" as the type
+                    mutation_type = "INS"  # Only use "INS" as the type
                     additional_notes = mutation_category.split('_', 1)[-1] if '_' in mutation_category else ""  # Extract details like "intergenic"
                     notes = f'{additional_notes}, {codon_ref_seq}->{codon_new_seq}'  # Include extracted notes and codon change
 
-                    # Build the SNP data dictionary
+                    # Build the INS data dictionary
                     ins_data.append({
                         "chr": chr_name,
                         "start": start,
@@ -47,7 +47,7 @@ def parse_ins_data(file_path):
                         "name": name,
                         "genep": genep,
                         "length": length,
-                        "type": mutation_type,  # Fixed as "SNP"
+                        "type": mutation_type,  # Fixed as "INS"
                         "noc": noc,
                         "notes": notes
                     })

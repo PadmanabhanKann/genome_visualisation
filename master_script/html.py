@@ -1,13 +1,16 @@
+
 import sys
 import re
 
 if __name__ == "__main__":
     # Check if the input file argument was provided
     if len(sys.argv) < 2:
-        print("Usage: python script1.py <input_file>")
+        print("Usage: python script1.py <input_file> <genome_length>" )
         sys.exit(1)
  # Get the input file from the command-line argument
     input_file = sys.argv[1]
+    genome_length = int(sys.argv[2])
+
 
 def parse_chr_data(file_path):
     with open(file_path, 'r') as file:
@@ -78,7 +81,7 @@ with open('genome.html', 'w') as file:
         <script>
             var NGCircosGenome = [
             [
-                ["{refseq}", 4641652],
+                ["{refseq}", {genome_length}],
             ]
             ];
             NGCircos01 = new NGCircos(SCATTER01,SCATTER02,SCATTER03,SCATTER05,SCATTER06,ARC01,ARC02,ARC03,NGCircosGenome, {{  // Initialize NG-Circos with "NGCircosGenome" and Main configuration
@@ -90,6 +93,16 @@ with open('genome.html', 'w') as file:
                 chrPad : 0,                              // distance between chromosomes
                 innerRadius: 300,                           // Main configuration "innerRadius"
                 outerRadius: 301,
+                 ticks: {{
+                        display: true,
+                        len: 5,
+                        color: "#000",
+                        textSize: 10,
+                        textColor: "#000",
+                        scale: 1000000,  // Adjust this value for tick interval
+                        realLength: false,
+                        offset: 0,
+            }},
                 SNPMouseOverDisplay : true,
                 SNPMouseOverColor : "blue",
                 SNPMouseOverCircleSize : 5,

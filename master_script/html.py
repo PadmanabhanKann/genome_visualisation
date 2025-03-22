@@ -10,16 +10,10 @@ if __name__ == "__main__":
  # Get the input file from the command-line argument
     input_file = sys.argv[1]
     genome_length = int(sys.argv[2])
+    seq_id = sys.argv[3]
 
 
-def parse_chr_data(file_path):
-    with open(file_path, 'r') as file:
-        for line in file:
-            match =re.search(r'#=REFSEQ\s+(\S+)\.gbk', line)
-            if match:
-                return match.group(1)
-            
-refseq=parse_chr_data(input_file)
+
 
 
 with open('genome.html', 'w') as file:
@@ -81,7 +75,7 @@ with open('genome.html', 'w') as file:
         <script>
             var NGCircosGenome = [
             [
-                ["{refseq}", {genome_length}],
+                ["{seq_id}", {genome_length}],
             ]
             ];
             NGCircos01 = new NGCircos(SCATTER01,SCATTER02,SCATTER03,SCATTER05,SCATTER06,ARC01,ARC02,ARC03,NGCircosGenome, {{  // Initialize NG-Circos with "NGCircosGenome" and Main configuration
@@ -93,6 +87,14 @@ with open('genome.html', 'w') as file:
                 chrPad : 0,                              // distance between chromosomes
                 innerRadius: 300,                           // Main configuration "innerRadius"
                 outerRadius: 301,
+                genomeLabel: {{
+                            display: false,
+                            textSize: 18,       // Larger font
+                            textColor: "#FF5733", // Orange color
+                            dx: 0,          // Shift labels outward
+                            dy: "0em" ,
+                            textAnchor: "middle"  // Adjust vertical positioning
+                        }},
                  ticks: {{
                         display: true,
                         len: 5,

@@ -111,6 +111,3 @@ genome_visualisation/
 
 ---
 
-## 📫 Contact
-
-For issues, suggestions, or feedback, please open an issue or reach out to **Padmanabhan Kannan**.

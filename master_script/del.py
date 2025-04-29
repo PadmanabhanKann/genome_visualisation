@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import sys
 
 # Function to parse DEL data from a file

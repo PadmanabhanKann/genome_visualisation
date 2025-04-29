@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import sys
 # Function to parse INS data from a file
 def parse_ins_data(file_path):

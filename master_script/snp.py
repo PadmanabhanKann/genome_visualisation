@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import sys
 # Function to parse SNP data from a file
 def parse_snp_data(file_path):

@@ -1,4 +1,4 @@
-name: gen_vis2
+name: gen_vis
 channels:
   - bioconda
   - conda-forge
@@ -6,9 +6,6 @@ channels:
   - https://repo.anaconda.com/pkgs/main
   - https://repo.anaconda.com/pkgs/r
 dependencies:
-  - biopython
-  - breseq
-  - pip
-  - pip:
-      - bcbio-gff
-prefix: /home/padma/miniconda3/envs/gen_vis2
+  - biopython=1.85
+  - breseq=0.39.0
+  - bcbio-gff=0.7.1
